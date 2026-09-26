@@ -57,14 +57,81 @@ assign bpal_addr  = rgb_addr;
 assign pal_wdin   = pal_din8;
 
 // MMR sections dumped after the BRAMs; 0x56000 is 128B-aligned
-assign ioctl_din = &ioctl_addr[6:4] ? ioctl_misc : ioctl_video;
+assign ioctl_din = nv_dout; // 8kB nvram window read back from SDRAM
 
+
+
+// SD-card nvram lives in the wram SDRAM window (upper half, +0x100000
+// words). During the MiSTer save/restore window (ioctl_ram) the CPU cen
+// is gated and this FSM owns the wram port; runs at clk to catch the
+// one-fast-cycle ioctl_wr strobes. dip_pause gives the user P-key pause.
+wire nv_pause = ioctl_ram | dip_pause;
+reg  nv_own;
+reg  [ 1:0] nv_st;
+reg  [12:0] nv_al;
+reg  [ 7:0] nv_dout;
+reg         nv_pend, nv_rdp;
+wire [20:0] nv_addr = {2'b10, 6'd0, nv_al[12:1], 1'b0};
+reg  [20:0] fsm_addr;
+reg  [15:0] fsm_din;
+reg  [ 1:0] fsm_dsn;
+reg         fsm_cs, fsm_we;
+
+assign wram_addr = nv_own ? fsm_addr : mwram_addr;
+assign wram_cs   = nv_own ? fsm_cs   : mwram_cs;
+assign wram_we   = nv_own ? fsm_we   : mwram_we;
+assign wram_din  = nv_own ? fsm_din  : mwram_din;
+assign wram_dsn  = nv_own ? fsm_dsn  : mwram_dsn;
+
+always @(posedge clk) begin
+    if( rst ) begin
+        nv_own <= 0; nv_st <= 0; fsm_cs <= 0; fsm_we <= 0;
+        nv_pend <= 0; nv_rdp <= 0;
+    end else begin
+        if( ioctl_ram && ioctl_wr ) begin // restore byte (one-cycle strobe)
+            nv_al   <= ioctl_addr[12:0];
+            fsm_din <= {ioctl_dout, ioctl_dout};
+            nv_pend <= 1;
+        end
+        if( ioctl_ram && !ioctl_wr && ioctl_addr[12:0]!=nv_al ) begin
+            nv_al  <= ioctl_addr[12:0]; // save: fetch the byte being read
+            nv_rdp <= 1;
+        end
+        case( nv_st )
+            0: if( ioctl_ram && !mwram_cs && (nv_pend||nv_rdp) ) begin
+                nv_own   <= 1;
+                fsm_addr <= nv_addr;
+                fsm_cs   <= 1;
+                fsm_we   <= nv_pend;
+                fsm_dsn  <= nv_pend ? {~nv_al[0], nv_al[0]} : 2'b00;
+                nv_st    <= 1;
+            end
+            1: if( wram_ok ) begin
+                if( !fsm_we ) nv_dout <= nv_al[0] ? wram_data[15:8] : wram_data[7:0];
+                fsm_cs  <= 0;
+                fsm_we  <= 0;
+                nv_pend <= 0;
+                nv_rdp  <= 0;
+                nv_st   <= 2;
+            end
+            2: begin
+                nv_own <= 0;
+                nv_st  <= 0;
+            end
+            default: nv_st <= 0;
+        endcase
+        if( !ioctl_ram ) begin
+            nv_own <= 0; nv_st <= 0; fsm_cs <= 0; fsm_we <= 0;
+            nv_pend <= 0; nv_rdp <= 0;
+        end
+    end
+end
 
 `ifndef NOMAIN
 jtsysfl_main u_main(
     .rst        ( rst48         ),
     .clk        ( clk48         ),
-    .cpu_cen    ( cpu_cen       ),
+    .cpu_cen    ( cpu_cen & ~nv_pause ),
     .lvbl       ( LVBL          ),
     .hs         ( HS            ),
     .raster_irqn( raster_irqn   ),
@@ -74,12 +141,12 @@ jtsysfl_main u_main(
     .main_ok    ( main_ok48     ),
     .main_data  ( main_d48      ),
     // work RAM
-    .wram_addr  ( wram_addr     ),
-    .wram_cs    ( wram_cs       ),
-    .wram_we    ( wram_we       ),
-    .wram_din   ( wram_din      ),
-    .wram_dsn   ( wram_dsn      ),
-    .wram_ok    ( wram_ok48     ),
+    .wram_addr  ( mwram_addr    ),
+    .wram_cs    ( mwram_cs      ),
+    .wram_we    ( mwram_we      ),
+    .wram_din   ( mwram_din     ),
+    .wram_dsn   ( mwram_dsn     ),
+    .wram_ok    ( wram_ok48 & ~nv_own ),
     .wram_data  ( wram_d48      ),
     .wram32_addr( wram32_addr   ),
     .wram32_cs  ( wram32_cs     ),
@@ -102,10 +169,6 @@ jtsysfl_main u_main(
     .share_din  ( share_din     ),
     .share_we   ( share_we      ),
     .share_dout ( share_dout    ),
-    .backup_addr ( backup_addr    ),
-    .backup_din  ( backup_din     ),
-    .backup_we   ( backup_we      ),
-    .backup_dout ( backup_dout    ),
     // video registers
     .scfg_cs    ( scfg_cs       ),
     .rozcfg_cs  ( rozcfg_cs     ),
@@ -227,11 +290,11 @@ jtsysfl_c75 u_c75(
 `else
 assign main_addr  = 0;
 assign main_cs    = 0;
-assign wram_addr  = 0;
-assign wram_cs    = 0;
-assign wram_we    = 0;
-assign wram_din   = 0;
-assign wram_dsn   = 3;
+assign mwram_addr = 0;
+assign mwram_cs   = 0;
+assign mwram_we   = 0;
+assign mwram_din  = 0;
+assign mwram_dsn  = 3;
 assign wram32_addr= 0;
 assign wram32_cs  = 0;
 assign cvram_addr = 0;

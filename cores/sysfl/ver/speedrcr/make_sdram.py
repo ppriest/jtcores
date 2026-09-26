@@ -150,7 +150,8 @@ for base, lf, uf in [(0, "se1obj0l.ic1", "se1obj0u.ic2"), (0x400000, "se1obj1l.i
 # divergence in the wheel-calibration defaults (see boot notes) - TODO
 mamenv = os.path.expanduser("~/develop/mame/nvram/speedrcr/nvram")
 nv = open(mamenv,"rb").read() if os.path.exists(mamenv) else bytes([0xff]*0x2000)
-open(os.path.join(outdir,"nvram.bin"),"wb").write(nv)  # restored into the nvram BRAM at download
+open(os.path.join(outdir,"nvram.bin"),"wb").write(nv)  # kept for reference dumps
+bank2[0x500000:0x502000] = nv     # warm nvram in the wram window
 print("nvram.bin written" + (" from MAME first-boot image" if os.path.exists(mamenv) else " fresh 0xFF"))
 
 open(os.path.join(outdir,"sdram_bank0.bin"),"wb").write(swab(bank0))
