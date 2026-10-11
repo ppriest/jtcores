@@ -255588,4 +255588,288 @@
 		<description>Gaelco CG1V</description>
 		<sound channels="0"/>
 	</machine>
+	<machine name="orius" sourcefile="konami/xexex.cpp" cloneof="xexex" romof="xexex">
+		<description>Orius (ver UAA)</description>
+		<year>1991</year>
+		<manufacturer>Konami</manufacturer>
+		<rom name="067uaa01.16d" size="262144" crc="f1263d3e" sha1="c8a10b90e754ec7a72a23ac85b888f071ca40bb1" region="maincpu" offset="0"/>
+		<rom name="067uaa02.16f" size="262144" crc="77709f64" sha1="c26f09c9723facb89ab8aae2a036be4e6892d4bf" region="maincpu" offset="1"/>
+		<rom name="067b03.13d" merge="067b03.13d" size="262144" crc="97833086" sha1="a564f7b1b52c774d78a59f4418c7ecccaf94ad41" region="maincpu" offset="100000"/>
+		<rom name="067b04.13f" merge="067b04.13f" size="262144" crc="26ec5dc8" sha1="9da62683bfa8f16607cbea2d59a1446ec8588c5b" region="maincpu" offset="100001"/>
+		<rom name="067uaa05.4e" merge="067eaa05.4e" size="131072" crc="0e33d6ec" sha1="4dd68cb78c779e2d035e43fec35a7672ed1c259b" region="audiocpu" offset="0"/>
+		<rom name="067b14.1n" merge="067b14.1n" size="1048576" crc="02a44bfa" sha1="ad95df4dbf8842820ef20f54407870afb6d0e4a3" region="k056832" offset="0"/>
+		<rom name="067b13.2n" merge="067b13.2n" size="1048576" crc="633c8eb5" sha1="a11f78003a1dffe2d8814d368155059719263082" region="k056832" offset="2"/>
+		<rom name="067b12.17n" merge="067b12.17n" size="1048576" crc="08d611b0" sha1="9cac60131e0411f173acd8ef3f206e5e58a7e5d2" region="k053246" offset="0"/>
+		<rom name="067b11.19n" merge="067b11.19n" size="1048576" crc="a26f7507" sha1="6bf717cb9fcad59a2eafda967f14120b9ebbc8c5" region="k053246" offset="2"/>
+		<rom name="067b10.20n" merge="067b10.20n" size="1048576" crc="ee31db8d" sha1="c41874fb8b401ea9cdd327ee6239b5925418cf7b" region="k053246" offset="4"/>
+		<rom name="067b09.22n" merge="067b09.22n" size="1048576" crc="88f072ef" sha1="7ecc04dbcc29b715117e970cc96e11137a21b83a" region="k053246" offset="6"/>
+		<rom name="067b08.22f" merge="067b08.22f" size="524288" crc="ca816b7b" sha1="769ce3700e41200c34adec98598c0fe371fe1e6d" region="k053250" offset="0"/>
+		<rom name="067b06.3e" merge="067b06.3e" size="2097152" crc="3b12fce4" sha1="c69172d9965b8da8a539812fac92d5f1a3c80d17" region="k054539" offset="0"/>
+		<rom name="067b07.1e" merge="067b07.1e" size="1048576" crc="ec87fe1b" sha1="ec9823aea5a1fc5c47c8262e15e10b28be87231c" region="k054539" offset="200000"/>
+		<rom name="er5911.19b" size="128" crc="547ee4e4" sha1="089601fcfa513f129d6e2587594b932d4a8fde18" region="eeprom" offset="0"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":scantimer" name="timer"/>
+		<device_ref tag=":audiocpu" name="z80"/>
+		<device_ref tag=":eeprom" name="er5911_8"/>
+		<device_ref tag=":screen" name="screen"/>
+		<device_ref tag=":palette" name="palette"/>
+		<device_ref tag=":k056832" name="k056832"/>
+		<device_ref tag=":k053246" name="k053247"/>
+		<device_ref tag=":k053250" name="k053250"/>
+		<device_ref tag=":k053251" name="k053251"/>
+		<device_ref tag=":k053252" name="k053252"/>
+		<device_ref tag=":k054338" name="k054338"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<device_ref tag=":k054321" name="k054321"/>
+		<device_ref tag=":k054321:soundlatch0" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch1" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch2" name="generic_latch_8"/>
+		<device_ref tag=":ymsnd" name="ym2151"/>
+		<device_ref tag=":k054539" name="k054539"/>
+		<device_ref tag=":filter1_l" name="filter_volume"/>
+		<device_ref tag=":filter1_r" name="filter_volume"/>
+		<device_ref tag=":filter2_l" name="filter_volume"/>
+		<device_ref tag=":filter2_r" name="filter_volume"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="16000000"/>
+		<chip type="cpu" tag="audiocpu" name="Zilog Z80" clock="8000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<chip type="audio" tag="ymsnd" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="k054539" name="Konami 054539 ADPCM" clock="18432000"/>
+		<chip type="audio" tag="filter1_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter1_r" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_r" name="Volume Filter"/>
+		<display tag="screen" type="raster" rotate="0" width="384" height="256" refresh="54.065744" pixclock="8000000" htotal="512" hbend="40" hbstart="424" vtotal="289" vbend="0" vbstart="256" />
+		<sound channels="1"/>
+		<input players="2" coins="2" service="yes">
+			<control type="joy" player="1" buttons="2" ways="8"/>
+			<control type="joy" player="2" buttons="2" ways="8"/>
+		</input>
+		<port tag=":EEPROM">
+		</port>
+		<port tag=":EEPROMOUT">
+		</port>
+		<port tag=":P1">
+		</port>
+		<port tag=":P2">
+		</port>
+		<port tag=":SYSTEM">
+		</port>
+		<driver status="imperfect" emulation="good" cocktail="preliminary" savestate="supported"/>
+		<feature type="graphics" status="imperfect"/>
+		<feature type="sound" overall="imperfect"/>
+	</machine>
+	<machine name="xexex" sourcefile="konami/xexex.cpp">
+		<description>Xexex (ver EAA)</description>
+		<year>1991</year>
+		<manufacturer>Konami</manufacturer>
+		<rom name="067eaa01.16d" size="262144" crc="3ebcb066" sha1="83a20433d9fdcc8b8d7133991f9a8164dddb61f3" region="maincpu" offset="0"/>
+		<rom name="067eaa02.16f" size="262144" crc="36ea7a48" sha1="34f8046d7ecf5ea66c59c5bc0d7627942c28fd3b" region="maincpu" offset="1"/>
+		<rom name="067b03.13d" size="262144" crc="97833086" sha1="a564f7b1b52c774d78a59f4418c7ecccaf94ad41" region="maincpu" offset="100000"/>
+		<rom name="067b04.13f" size="262144" crc="26ec5dc8" sha1="9da62683bfa8f16607cbea2d59a1446ec8588c5b" region="maincpu" offset="100001"/>
+		<rom name="067eaa05.4e" size="131072" crc="0e33d6ec" sha1="4dd68cb78c779e2d035e43fec35a7672ed1c259b" region="audiocpu" offset="0"/>
+		<rom name="067b14.1n" size="1048576" crc="02a44bfa" sha1="ad95df4dbf8842820ef20f54407870afb6d0e4a3" region="k056832" offset="0"/>
+		<rom name="067b13.2n" size="1048576" crc="633c8eb5" sha1="a11f78003a1dffe2d8814d368155059719263082" region="k056832" offset="2"/>
+		<rom name="067b12.17n" size="1048576" crc="08d611b0" sha1="9cac60131e0411f173acd8ef3f206e5e58a7e5d2" region="k053246" offset="0"/>
+		<rom name="067b11.19n" size="1048576" crc="a26f7507" sha1="6bf717cb9fcad59a2eafda967f14120b9ebbc8c5" region="k053246" offset="2"/>
+		<rom name="067b10.20n" size="1048576" crc="ee31db8d" sha1="c41874fb8b401ea9cdd327ee6239b5925418cf7b" region="k053246" offset="4"/>
+		<rom name="067b09.22n" size="1048576" crc="88f072ef" sha1="7ecc04dbcc29b715117e970cc96e11137a21b83a" region="k053246" offset="6"/>
+		<rom name="067b08.22f" size="524288" crc="ca816b7b" sha1="769ce3700e41200c34adec98598c0fe371fe1e6d" region="k053250" offset="0"/>
+		<rom name="067b06.3e" size="2097152" crc="3b12fce4" sha1="c69172d9965b8da8a539812fac92d5f1a3c80d17" region="k054539" offset="0"/>
+		<rom name="067b07.1e" size="1048576" crc="ec87fe1b" sha1="ec9823aea5a1fc5c47c8262e15e10b28be87231c" region="k054539" offset="200000"/>
+		<rom name="er5911.19b" size="128" crc="155624cc" sha1="457f921e3a5d053c53e4f1a44941eb0a1f22e1b2" region="eeprom" offset="0"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":scantimer" name="timer"/>
+		<device_ref tag=":audiocpu" name="z80"/>
+		<device_ref tag=":eeprom" name="er5911_8"/>
+		<device_ref tag=":screen" name="screen"/>
+		<device_ref tag=":palette" name="palette"/>
+		<device_ref tag=":k056832" name="k056832"/>
+		<device_ref tag=":k053246" name="k053247"/>
+		<device_ref tag=":k053250" name="k053250"/>
+		<device_ref tag=":k053251" name="k053251"/>
+		<device_ref tag=":k053252" name="k053252"/>
+		<device_ref tag=":k054338" name="k054338"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<device_ref tag=":k054321" name="k054321"/>
+		<device_ref tag=":k054321:soundlatch0" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch1" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch2" name="generic_latch_8"/>
+		<device_ref tag=":ymsnd" name="ym2151"/>
+		<device_ref tag=":k054539" name="k054539"/>
+		<device_ref tag=":filter1_l" name="filter_volume"/>
+		<device_ref tag=":filter1_r" name="filter_volume"/>
+		<device_ref tag=":filter2_l" name="filter_volume"/>
+		<device_ref tag=":filter2_r" name="filter_volume"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="16000000"/>
+		<chip type="cpu" tag="audiocpu" name="Zilog Z80" clock="8000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<chip type="audio" tag="ymsnd" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="k054539" name="Konami 054539 ADPCM" clock="18432000"/>
+		<chip type="audio" tag="filter1_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter1_r" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_r" name="Volume Filter"/>
+		<display tag="screen" type="raster" rotate="0" width="384" height="256" refresh="54.065744" pixclock="8000000" htotal="512" hbend="40" hbstart="424" vtotal="289" vbend="0" vbstart="256" />
+		<sound channels="1"/>
+		<input players="2" coins="2" service="yes">
+			<control type="joy" player="1" buttons="2" ways="8"/>
+			<control type="joy" player="2" buttons="2" ways="8"/>
+		</input>
+		<port tag=":EEPROM">
+		</port>
+		<port tag=":EEPROMOUT">
+		</port>
+		<port tag=":P1">
+		</port>
+		<port tag=":P2">
+		</port>
+		<port tag=":SYSTEM">
+		</port>
+		<driver status="imperfect" emulation="good" cocktail="preliminary" savestate="supported"/>
+		<feature type="graphics" status="imperfect"/>
+		<feature type="sound" overall="imperfect"/>
+	</machine>
+	<machine name="xexexa" sourcefile="konami/xexex.cpp" cloneof="xexex" romof="xexex">
+		<description>Xexex (ver AAA)</description>
+		<year>1991</year>
+		<manufacturer>Konami</manufacturer>
+		<rom name="067aaa01.16d" size="262144" crc="cf557144" sha1="4ce587580d953b88864652dd66485d49ca719ec5" region="maincpu" offset="0"/>
+		<rom name="067aaa02.16f" size="262144" crc="b7b98d52" sha1="ca2343bf37f779699b6782772e559ea5662c1742" region="maincpu" offset="1"/>
+		<rom name="067b03.13d" merge="067b03.13d" size="262144" crc="97833086" sha1="a564f7b1b52c774d78a59f4418c7ecccaf94ad41" region="maincpu" offset="100000"/>
+		<rom name="067b04.13f" merge="067b04.13f" size="262144" crc="26ec5dc8" sha1="9da62683bfa8f16607cbea2d59a1446ec8588c5b" region="maincpu" offset="100001"/>
+		<rom name="067eaa05.4e" merge="067eaa05.4e" size="131072" crc="0e33d6ec" sha1="4dd68cb78c779e2d035e43fec35a7672ed1c259b" region="audiocpu" offset="0"/>
+		<rom name="067b14.1n" merge="067b14.1n" size="1048576" crc="02a44bfa" sha1="ad95df4dbf8842820ef20f54407870afb6d0e4a3" region="k056832" offset="0"/>
+		<rom name="067b13.2n" merge="067b13.2n" size="1048576" crc="633c8eb5" sha1="a11f78003a1dffe2d8814d368155059719263082" region="k056832" offset="2"/>
+		<rom name="067b12.17n" merge="067b12.17n" size="1048576" crc="08d611b0" sha1="9cac60131e0411f173acd8ef3f206e5e58a7e5d2" region="k053246" offset="0"/>
+		<rom name="067b11.19n" merge="067b11.19n" size="1048576" crc="a26f7507" sha1="6bf717cb9fcad59a2eafda967f14120b9ebbc8c5" region="k053246" offset="2"/>
+		<rom name="067b10.20n" merge="067b10.20n" size="1048576" crc="ee31db8d" sha1="c41874fb8b401ea9cdd327ee6239b5925418cf7b" region="k053246" offset="4"/>
+		<rom name="067b09.22n" merge="067b09.22n" size="1048576" crc="88f072ef" sha1="7ecc04dbcc29b715117e970cc96e11137a21b83a" region="k053246" offset="6"/>
+		<rom name="067b08.22f" merge="067b08.22f" size="524288" crc="ca816b7b" sha1="769ce3700e41200c34adec98598c0fe371fe1e6d" region="k053250" offset="0"/>
+		<rom name="067b06.3e" merge="067b06.3e" size="2097152" crc="3b12fce4" sha1="c69172d9965b8da8a539812fac92d5f1a3c80d17" region="k054539" offset="0"/>
+		<rom name="067b07.1e" merge="067b07.1e" size="1048576" crc="ec87fe1b" sha1="ec9823aea5a1fc5c47c8262e15e10b28be87231c" region="k054539" offset="200000"/>
+		<rom name="er5911.19b" size="128" crc="051c14c6" sha1="23addbaa2ce323c06551b343ca45dea4fd2b9eee" region="eeprom" offset="0"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":scantimer" name="timer"/>
+		<device_ref tag=":audiocpu" name="z80"/>
+		<device_ref tag=":eeprom" name="er5911_8"/>
+		<device_ref tag=":screen" name="screen"/>
+		<device_ref tag=":palette" name="palette"/>
+		<device_ref tag=":k056832" name="k056832"/>
+		<device_ref tag=":k053246" name="k053247"/>
+		<device_ref tag=":k053250" name="k053250"/>
+		<device_ref tag=":k053251" name="k053251"/>
+		<device_ref tag=":k053252" name="k053252"/>
+		<device_ref tag=":k054338" name="k054338"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<device_ref tag=":k054321" name="k054321"/>
+		<device_ref tag=":k054321:soundlatch0" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch1" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch2" name="generic_latch_8"/>
+		<device_ref tag=":ymsnd" name="ym2151"/>
+		<device_ref tag=":k054539" name="k054539"/>
+		<device_ref tag=":filter1_l" name="filter_volume"/>
+		<device_ref tag=":filter1_r" name="filter_volume"/>
+		<device_ref tag=":filter2_l" name="filter_volume"/>
+		<device_ref tag=":filter2_r" name="filter_volume"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="16000000"/>
+		<chip type="cpu" tag="audiocpu" name="Zilog Z80" clock="8000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<chip type="audio" tag="ymsnd" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="k054539" name="Konami 054539 ADPCM" clock="18432000"/>
+		<chip type="audio" tag="filter1_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter1_r" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_r" name="Volume Filter"/>
+		<display tag="screen" type="raster" rotate="0" width="384" height="256" refresh="54.065744" pixclock="8000000" htotal="512" hbend="40" hbstart="424" vtotal="289" vbend="0" vbstart="256" />
+		<sound channels="1"/>
+		<input players="2" coins="2" service="yes">
+			<control type="joy" player="1" buttons="2" ways="8"/>
+			<control type="joy" player="2" buttons="2" ways="8"/>
+		</input>
+		<port tag=":EEPROM">
+		</port>
+		<port tag=":EEPROMOUT">
+		</port>
+		<port tag=":P1">
+		</port>
+		<port tag=":P2">
+		</port>
+		<port tag=":SYSTEM">
+		</port>
+		<driver status="imperfect" emulation="good" cocktail="preliminary" savestate="supported"/>
+		<feature type="graphics" status="imperfect"/>
+		<feature type="sound" overall="imperfect"/>
+	</machine>
+	<machine name="xexexj" sourcefile="konami/xexex.cpp" cloneof="xexex" romof="xexex">
+		<description>Xexex (ver JAA)</description>
+		<year>1991</year>
+		<manufacturer>Konami</manufacturer>
+		<rom name="067jaa01.16d" size="262144" crc="06e99784" sha1="d53fe3724608992a6938c36aa2719dc545d6b89e" region="maincpu" offset="0"/>
+		<rom name="067jaa02.16f" size="262144" crc="30ae5bc4" sha1="60491e31eef64a9206d1372afa32d83c6c0968b3" region="maincpu" offset="1"/>
+		<rom name="067b03.13d" merge="067b03.13d" size="262144" crc="97833086" sha1="a564f7b1b52c774d78a59f4418c7ecccaf94ad41" region="maincpu" offset="100000"/>
+		<rom name="067b04.13f" merge="067b04.13f" size="262144" crc="26ec5dc8" sha1="9da62683bfa8f16607cbea2d59a1446ec8588c5b" region="maincpu" offset="100001"/>
+		<rom name="067jaa05.4e" size="131072" crc="2f4dd0a8" sha1="bfa76c9c968f1beba648a2911510e3d666a8fe3a" region="audiocpu" offset="0"/>
+		<rom name="067b14.1n" merge="067b14.1n" size="1048576" crc="02a44bfa" sha1="ad95df4dbf8842820ef20f54407870afb6d0e4a3" region="k056832" offset="0"/>
+		<rom name="067b13.2n" merge="067b13.2n" size="1048576" crc="633c8eb5" sha1="a11f78003a1dffe2d8814d368155059719263082" region="k056832" offset="2"/>
+		<rom name="067b12.17n" merge="067b12.17n" size="1048576" crc="08d611b0" sha1="9cac60131e0411f173acd8ef3f206e5e58a7e5d2" region="k053246" offset="0"/>
+		<rom name="067b11.19n" merge="067b11.19n" size="1048576" crc="a26f7507" sha1="6bf717cb9fcad59a2eafda967f14120b9ebbc8c5" region="k053246" offset="2"/>
+		<rom name="067b10.20n" merge="067b10.20n" size="1048576" crc="ee31db8d" sha1="c41874fb8b401ea9cdd327ee6239b5925418cf7b" region="k053246" offset="4"/>
+		<rom name="067b09.22n" merge="067b09.22n" size="1048576" crc="88f072ef" sha1="7ecc04dbcc29b715117e970cc96e11137a21b83a" region="k053246" offset="6"/>
+		<rom name="067b08.22f" merge="067b08.22f" size="524288" crc="ca816b7b" sha1="769ce3700e41200c34adec98598c0fe371fe1e6d" region="k053250" offset="0"/>
+		<rom name="067b06.3e" merge="067b06.3e" size="2097152" crc="3b12fce4" sha1="c69172d9965b8da8a539812fac92d5f1a3c80d17" region="k054539" offset="0"/>
+		<rom name="067b07.1e" merge="067b07.1e" size="1048576" crc="ec87fe1b" sha1="ec9823aea5a1fc5c47c8262e15e10b28be87231c" region="k054539" offset="200000"/>
+		<rom name="er5911.19b" size="128" crc="79a79c7b" sha1="02eb235226949af0147d6d0fd2bd3d7a68083ae6" region="eeprom" offset="0"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":scantimer" name="timer"/>
+		<device_ref tag=":audiocpu" name="z80"/>
+		<device_ref tag=":eeprom" name="er5911_8"/>
+		<device_ref tag=":screen" name="screen"/>
+		<device_ref tag=":palette" name="palette"/>
+		<device_ref tag=":k056832" name="k056832"/>
+		<device_ref tag=":k053246" name="k053247"/>
+		<device_ref tag=":k053250" name="k053250"/>
+		<device_ref tag=":k053251" name="k053251"/>
+		<device_ref tag=":k053252" name="k053252"/>
+		<device_ref tag=":k054338" name="k054338"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<device_ref tag=":k054321" name="k054321"/>
+		<device_ref tag=":k054321:soundlatch0" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch1" name="generic_latch_8"/>
+		<device_ref tag=":k054321:soundlatch2" name="generic_latch_8"/>
+		<device_ref tag=":ymsnd" name="ym2151"/>
+		<device_ref tag=":k054539" name="k054539"/>
+		<device_ref tag=":filter1_l" name="filter_volume"/>
+		<device_ref tag=":filter1_r" name="filter_volume"/>
+		<device_ref tag=":filter2_l" name="filter_volume"/>
+		<device_ref tag=":filter2_r" name="filter_volume"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="16000000"/>
+		<chip type="cpu" tag="audiocpu" name="Zilog Z80" clock="8000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<chip type="audio" tag="ymsnd" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="k054539" name="Konami 054539 ADPCM" clock="18432000"/>
+		<chip type="audio" tag="filter1_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter1_r" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_l" name="Volume Filter"/>
+		<chip type="audio" tag="filter2_r" name="Volume Filter"/>
+		<display tag="screen" type="raster" rotate="0" width="384" height="256" refresh="54.065744" pixclock="8000000" htotal="512" hbend="40" hbstart="424" vtotal="289" vbend="0" vbstart="256" />
+		<sound channels="1"/>
+		<input players="2" coins="2" service="yes">
+			<control type="joy" player="1" buttons="2" ways="8"/>
+			<control type="joy" player="2" buttons="2" ways="8"/>
+		</input>
+		<port tag=":EEPROM">
+		</port>
+		<port tag=":EEPROMOUT">
+		</port>
+		<port tag=":P1">
+		</port>
+		<port tag=":P2">
+		</port>
+		<port tag=":SYSTEM">
+		</port>
+		<driver status="imperfect" emulation="good" cocktail="preliminary" savestate="supported"/>
+		<feature type="graphics" status="imperfect"/>
+		<feature type="sound" overall="imperfect"/>
+	</machine>
 </mame>

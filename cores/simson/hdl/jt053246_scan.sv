@@ -47,6 +47,8 @@ module jt053246_scan (    // sprite logic
 );
 parameter [7:0] SCAN_START = 8'd0;
 parameter [8:0] BOTTOM     = 9'h1F7;
+parameter [8:0] VTOP       = 9'h10D;   // lines above VTOP are not scanned
+parameter       NO_LEFT_WRAP = 0;      // 1: no HADJ shift for sprites starting left of HDUMP_MIN
 parameter [9:0] HOFFSET    = 10'd62;
 
 localparam [11:0] MAX_ZOOMIN= 6; // a value below 3 will break the "pass" scene in run&gun
@@ -117,7 +119,7 @@ always @* begin : B
     y2        = y + {1'b0,ymove};
     ydiff     = yz_add[6+:10];
     x2        = x - zmove( hsz, hscl );
-    left_wrap = xstart < HDUMP_MIN;
+    left_wrap = NO_LEFT_WRAP==0 && xstart < HDUMP_MIN;
     // test ver/game/scene/1 -> shadow, scan_obj 9
     case( vsz )
         0: vmir_eff = nx_mir[1] && !ydiff[3];
@@ -175,7 +177,7 @@ always @(posedge clk) begin : A
     end else if( cen2 ) begin
         hs_l <= hs;
         dr_start <= 0;
-        if( hs && !hs_l && vdump>9'h10D && vdump<=BOTTOM) begin
+        if( hs && !hs_l && vdump>VTOP && vdump<=BOTTOM) begin
             done     <= 0;
             scan_obj <= SCAN_START;
             scan_sub <= 0;

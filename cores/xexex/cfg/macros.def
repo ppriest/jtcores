@@ -1,0 +1,40 @@
+CORENAME=JTXEXEX
+
+JTFRAME_BUTTONS=2
+JTFRAME_JOY_DURL
+# Video configuration
+JTFRAME_COLORW=8
+JTFRAME_PXLCLK=8
+JTFRAME_WIDTH=384
+JTFRAME_HEIGHT=256
+# no JTFRAME_OSD_TEST: the test switch is a button (MAME PORT_SERVICE_NO_TOGGLE; the
+# game acts on its release), so dip_test follows jtframe's test key, F2, as rungun's
+# flip screen: the OSD turns the frame in the video (jtxexex_video flip); the game's own
+# flip is its service-menu setting, in EEPROM. JTFRAME_OSD_FLIP gives dip_flip = ~status[1],
+# but jtframe's MiSTer menu lists "Flip screen" only for vertical games, so it is added
+# here on the same bit
+JTFRAME_OSD_FLIP
+CORE_OSD=P1O1,Flip screen,Off,On;
+JTFRAME_STEREO
+
+JTFRAME_CREDITS_HSTART=24
+JTFRAME_DEBUG_VPOS=5
+
+JTFRAME_MR_DDRLOAD
+
+# SDRAM at 48 MHz, everything on clk. The K053250's worst case (384 random reads a
+# line) may need 96 MHz: doc/ROADMAP.md, "K053250 ROM bandwidth", decided in Phase 4.
+
+# SDRAM banks, from the ROM order in mame2mra.toml:
+# 0 main 180000 | 1 audiocpu 20000 + pcm 300000 + lvc 80000 | 2 tiles 200000 | 3 obj 400000
+# The Z80 reads audiocpu through a 4 kB BRAM cache (mem.yaml), so bank 1 is left
+# mostly to the K054539 and the K053250.
+JTFRAME_BA1_START=0x180000
+JTFRAME_BA2_START=0x520000
+JTFRAME_BA3_START=0x720000
+
+SND_RAMW=13
+
+# default EEPROM needed to prevent game from booting upside down with error
+# NVRAM file: the EEPROM (128 bytes), then hiram (jtxexex_hiscore)
+JTFRAME_IOCTL_RD=256

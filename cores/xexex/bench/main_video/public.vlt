@@ -1,0 +1,12 @@
+`verilator_config
+// bus signals tb.cpp logs
+public_flat_rd -module "jtxexex_main" -var "A"
+public_flat_rd -module "jtxexex_main" -var "ASn"
+public_flat_rd -module "jtxexex_main" -var "UDSn"
+public_flat_rd -module "jtxexex_main" -var "LDSn"
+public_flat_rd -module "jtxexex_main" -var "RnW"
+public_flat_rd -module "jtxexex_main" -var "FC"
+public_flat_rd -module "jtxexex_main" -var "cpu_din"
+public_flat_rd -module "jtxexex_main" -var "DTACKn"
+public_flat_rd -module "jtxexex_main" -var "HALTn"
+public_flat_rd -module "jtframe_dual_ram_cen" -var "mem"

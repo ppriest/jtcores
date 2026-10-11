@@ -1,0 +1,82 @@
+params:
+  - { name: PCM_OFFSET,   value: "22'h020000>>1" }
+  - { name: LVC_OFFSET,   value: "22'h320000>>1" }
+clocks:
+  clk48:
+    - freq: 16M
+      outputs:
+        - cen_16
+        - cen_8
+        - cen_4   # cen_fm
+        - cen_2   # cen_fm2
+    - freq: 18432k
+      gate: [pcm]
+      outputs:
+        - cen_pcm
+audio:
+  gain: 1.99
+  channels:
+    - { name: k539,   module: jt054539, rsum: 1k, rc: [ { r: 4.7k, c: 2.2n } ] }
+    # MAME: the YM2151 at 0.2 through a gain of 71/55 * sqrt(pan/14) set by K054539
+    # register 0x13f, against the K054539's 0.4 (doc/xexex.cpp:503-510, 735-746). The game
+    # writes 0x13f only as 0x00 or 0x18, both centre (pan 7): 0.456 of the K054539, 1k/2.2k
+    - { name: fm,     module: jt51,     rsum: 2.2k }
+sdram:
+  banks:
+    - buses:
+        - name: main
+          addr_width: 21
+          data_width: 16
+    - buses:
+        # Z80 program: a BRAM cache keeps most fetches off the bank. 4 kB misses on
+        # 0.25 % of reads in MAME play, at most 24 in a scanline (scripts/z80_cache.py);
+        # jtframe keeps a valid flop per 8-byte line, so size costs logic
+        - name: snd
+          addr_width: 17
+          data_width: 8
+          cache_size: 4kB
+        - name: pcm
+          addr_width: 22
+          data_width: 32
+          offset: PCM_OFFSET
+        - name: lvc
+          addr_width: 19
+          data_width: 32
+          offset: LVC_OFFSET
+    - buses:
+        - name: lyrf
+          addr_width: 21
+          data_width: 32
+        - name: lyra
+          addr_width: 21
+          data_width: 32
+        - name: lyrb
+          addr_width: 21
+          data_width: 32
+    - buses:
+        - name: lyro
+          addr_width: 23
+          data_width: 32
+bram:
+  # work RAM, 080000-08ffff: two 32 kB SRAMs on the board, no wait states
+  - name: ram
+    addr_width: 16
+    data_width: 16
+    addr: wram_a          # jtxexex_hiscore shares the port on the CPU's idle clocks
+    din: wram_din
+    dout: ram_data
+    rw: true
+  # EEROM
+  - name: nvram
+    addr_width: 7
+    data_width: 8
+    simfile: {}
+
+    rw: true
+    ioctl: { save: true, restore: true, order: 0 }
+  # high scores (jtxexex_hiscore), saved after the EEPROM in the same NVRAM file
+  - name: hiram
+    addr_width: 7
+    data_width: 16
+    rw: true
+    ioctl: { save: true, restore: true, order: 1 }

@@ -14,7 +14,20 @@ module jtsimson_obj #(parameter
     K55673_DESC_SORT = 0,
     // Set high to trigger DMA on the edge dma_en signal
     EDGE_TRIGGER = 0,
-    parameter [9:0] HOFFSET   = 10'd62
+    // 32 kB of RAM (RAMW=14) holding 256 entries every 0x40 words, of which the
+    // DMA takes words 0, 2 ... 14 (Xexex)
+    LARGE_DMA = 0,
+    // sort on all eight z bits (see jt053246_dma)
+    ZSORT8 = 0,
+    // no left-wrap shift for sprites starting left of the screen (see jt053246_scan)
+    NO_LEFT_WRAP = 0,
+    // the ROM readback has an address window of its own, so RAM reads ignore OBJCHA
+    ROM_WINDOW = 0,
+    // jtframe_objdraw's read-out fix; off for a buffer read right to left (flip)
+    HFIX = 1,
+    parameter [9:0] HOFFSET   = 10'd62,
+    // vdump window the scan runs in
+    parameter [8:0] VTOP = 9'h10D, BOTTOM = 9'h1F7
 )(
     input             rst,
     input             clk,
@@ -72,6 +85,13 @@ wire [15:0] ram_data, dma_data;
 wire [22:2] pre_addr;
 wire [22:1] rmrd_addr;
 wire [13:1] dma_addr;
+wire [RAMW:1] dma_ram_addr;
+wire [RAMW:0] ioctl_ram_addr = ioctl_addr;  // zero-extended for RAMW=14
+generate if( LARGE_DMA==1 ) begin : g_large
+    assign dma_ram_addr = { dma_addr[11:4], 2'b00, dma_addr[3:1], 1'b0 };
+end else begin : g_packed
+    assign dma_ram_addr = dma_addr[RAMW:1];
+end endgenerate
 wire [15:0] pre_pxl;
 
 // Draw module
@@ -91,7 +111,7 @@ assign rom_cs    = ~objcha_n | pre_cs;
 assign rom_addr  = !objcha_n ? rmrd_addr[22:2] :
     { pre_addr[22:7], pre_addr[5:2], pre_addr[6] };
 
-assign cpu_din   = !objcha_n ? rmrd_addr[1] ? rom_data[31:16] : rom_data[15:0] :
+assign cpu_din   = !objcha_n && !(ROM_WINDOW==1 && ram_cs) ? rmrd_addr[1] ? rom_data[31:16] : rom_data[15:0] :
                     ram_data;
 
 // Shadow understanding so far
@@ -120,7 +140,12 @@ jt053246 #(
     .K55673          ( K55673           ),
     .K55673_DESC_SORT( K55673_DESC_SORT ),
     .EDGE_TRIGGER    ( EDGE_TRIGGER     ),
-    .HOFFSET         ( HOFFSET          )
+    .LARGE_DMA       ( LARGE_DMA        ),
+    .ZSORT8          ( ZSORT8           ),
+    .NO_LEFT_WRAP    ( NO_LEFT_WRAP     ),
+    .HOFFSET         ( HOFFSET          ),
+    .VTOP            ( VTOP             ),
+    .BOTTOM          ( BOTTOM           )
 ) u_scan (    // sprite logic
     .rst        ( rst       ),
     .clk        ( clk       ),
@@ -176,7 +201,7 @@ jt053246 #(
 jtframe_objdraw #(
     .SHADOW(SHADOW),.SHADOW_PEN(SHADOW_PEN),
     .AW(10),.CW(16),.PW(4+10+2),.LATCH(1),.SWAPH(1),
-    .ZW(12),.ZI(6), .ZENLARGE(1),.SW(2),.FLIP_OFFSET(9'h12)
+    .ZW(12),.ZI(6), .ZENLARGE(1),.SW(2),.FLIP_OFFSET(9'h12),.HFIX(HFIX)
 ) u_draw(
     .rst        ( rst           ),
     .clk        ( clk           ),
@@ -218,11 +243,11 @@ jtframe_dual_nvram16 #(
     .q0     ( ram_data  ),
     // Port 1 - Video access
     .clk1   ( clk       ),
-    .addr1a ( dma_addr[RAMW:1] ),
+    .addr1a ( dma_ram_addr ),
     .q1a    ( dma_data  ),
     // 8-bit IOCTL access
     .data1  ( 8'd0      ),
-    .addr1b ( ioctl_addr[RAMW:0] ),
+    .addr1b ( ioctl_ram_addr ),
     .we1b   ( 1'd0      ),
     .q1b    ( dump_ram  ),
     .sel_b  ( ioctl_ram )

@@ -1,0 +1,23 @@
+[parse]
+sourcefile=[ "xexex.cpp" ]
+main="xexex"
+
+# button 1 fires the main weapon, button 2 launches and recalls the Flint
+# (shmups.wiki/library/Xexex; arcade-museum.com/Videogame/xexex)
+[buttons]
+names = [
+    { names="Shot,Flint" },
+]
+
+[ROM]
+regions = [
+    { name="maincpu", width=16, reverse=true },
+    { name="audiocpu" },
+    { name="k054539", rename="pcm" },
+    { name="k056832", width=32, rename="tiles" },
+    { name="k053250", rename="lvc" },
+    { name="k053246", width=64, rename="obj" },
+    { name="eeprom", rename="nvram", skip=true }   # each set's default: rom index 2
+]
+
+order=["maincpu","audiocpu","pcm","lvc","tiles","obj"]

@@ -8,6 +8,7 @@ import(
 )
 
 func dump_qip(all []string) error {
+	all = to_slash(all) // Quartus reads .qip as Tcl, where a backslash escapes
 	fout, err := os.Create("files.qip")
 	if err != nil { return err }
 	defer fout.Close()
@@ -39,6 +40,7 @@ func dump_qip(all []string) error {
 }
 
 func dump_sim(all []string ) error {
+	all = to_slash(all) // Quartus reads .qip as Tcl, where a backslash escapes
 	fout, err := os.Create( "game.f" )
 	if err != nil { return err }
 	fout_vhdl, err := os.Create("jtsim_vhdl.f")
@@ -66,6 +68,7 @@ func dump_sim(all []string ) error {
 }
 
 func dump_plain(all []string ) error {
+	all = to_slash(all) // Quartus reads .qip as Tcl, where a backslash escapes
 	fout, err := os.Create( "files" )
 	if err != nil { return err }
 	defer fout.Close()
@@ -75,4 +78,11 @@ func dump_plain(all []string ) error {
 		fmt.Fprintln(fout, each)
 	}
 	return nil
+}
+func to_slash(all []string) []string {
+	out := make([]string, len(all))
+	for k, each := range all {
+		out[k] = filepath.ToSlash(each)
+	}
+	return out
 }

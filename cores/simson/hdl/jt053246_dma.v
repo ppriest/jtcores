@@ -28,7 +28,13 @@ module jt053246_dma(
     output reg        flicker
 );
 
-parameter K55673=0, K55673_DESC_SORT=0, EDGE_TRIGGER=0;
+parameter K55673=0, K55673_DESC_SORT=0, EDGE_TRIGGER=0,
+// LARGE_DMA=1: 256 entries spread over a 32 kB object RAM, one every 0x40 words
+// (jtsimson_obj spreads the address); the copy ends after the last of them
+          LARGE_DMA=0,
+// ZSORT8=1: sort on all eight z bits, descending. Keyed on { z[7], ~z[6:0] }, a game
+// using z values over 0x80 (Xexex) gets those sprites out of order or lost
+          ZSORT8=0;
 
 wire        dma_we, hs_pos;
 reg  [ 1:0] lvbl_sh;
@@ -46,7 +52,8 @@ assign dma_wr_addr = dma_clr ? dma_addr[11:1] : dma_bufa;
 assign hs_pos  = hs & ~hsl;
 
 assign sort_673 = dma_data[7:0]^{8{K55673_DESC_SORT[0]}};
-assign sort_24x ={ ~k44_en & dma_data[7], k44_en ? dma_data[6:0] : ~dma_data[6:0]};
+assign sort_24x = ZSORT8==1 ? ~dma_data[7:0] :
+                  { ~k44_en & dma_data[7], k44_en ? dma_data[6:0] : ~dma_data[6:0]};
 
 // DMA logic
 always @(posedge clk, posedge rst) begin
@@ -121,7 +128,8 @@ always @(posedge clk) begin
             dma_bufa[ 3:1] <= dma_addr[3:1];
             if( dma_addr[3:1]==6 ) begin
                 dma_addr[12:1] <= dma_addr[12:1] + 12'd2; // skip 7
-                dma_bsy <= !(&dma_addr[10:2] && (k44_en || &dma_addr[12:11]));
+                dma_bsy <= LARGE_DMA==1 ? !(&dma_addr[11:2]) :
+                                      !(&dma_addr[10:2] && (k44_en || &dma_addr[12:11]));
             end
         end
     end
